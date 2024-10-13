@@ -1,0 +1,97 @@
+/* navbar.css */
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  flex-wrap: wrap; /* Makes the navbar responsive */
+  position: fixed; /* Fixes the navbar at the top */
+  top: 0; /* Positions it at the top */
+  left: 0; /* Aligns it to the left */
+  width: 100%; /* Ensures it spans the entire width of the viewport */
+  z-index: 1000; /* Ensures it appears above other elements */
+  background-color: white; /* Set a background color for visibility */
+  margin: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow */
+}
+
+.navbar-nav {
+  margin: 0 auto; /* Centers the ul horizontally */
+  display: flex;
+  justify-content: center; /* Ensures the links are centered inside the ul */
+}
+
+.brand-content {
+  display: flex;
+  align-items: center;
+}
+
+.theme-toggle {
+  margin-left: auto;
+}
+
+.navbar-nav .nav-link {
+  font-weight: bold;
+  justify-content: space-evenly;
+}
+
+.navbar-nav .nav-link.active {
+  color: tomato !important; /* Change the active link color to tomato */
+  font-weight: bold;
+}
+
+/* Optional: Change the hover color for all links */
+.navbar-nav .nav-link:hover {
+  color: #ff6347 !important; /* Adjust the hover color if needed */
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .navbar-container {
+      flex-direction: row; /* Stacks the elements vertically on smaller screens */
+      align-items: center;
+  }
+
+  .theme-toggle {
+      align-self: flex-end; /* Centers the toggle button */
+  }
+}
+
+.nav-links:hover {
+  background-color: tomato;
+  color: white;
+}
+
+.nav-links:active {
+  background-color: tomato;
+  color: white;
+}
+
+/* Optional: Add padding to the top of the body to prevent content from hiding behind the fixed navbar */
+body {
+  padding-top: 120px; /* Adjust this value based on the navbar height */
+}
+
+
+.fixed-list-container {
+  position: fixed;
+  top: 60px; /* Adjust based on the height of your navbar */
+  left: 0;
+  right: 0;
+  background-color: #1e1e1e; /* Same background as before */
+  z-index: 999; /* Make sure it's below the navbar */
+  padding: 10px 0; /* Optional: Add some padding */
+  margin: 0; /* Ensure no margin */
+}
+
+
+@media (max-width: 768px) {
+  .navbar-container {
+      /* Any specific styles for mobile */
+      padding: 0; /* Remove any padding if it's causing gaps */
+  }
+
+  .fixed-list-container {
+      top: 40px; /* Adjust if needed */
+  }
+}

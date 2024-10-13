@@ -1,0 +1,69 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.app {
+    display: flex;
+}
+
+.navbar {
+    background-color: #4CAF50; /* Green background */
+    overflow: hidden;
+    display: flex;
+    justify-content: space-around; /* Space items evenly */
+}
+
+.navbar a {
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.navbar a:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+.container {
+    display: flex;
+    flex: 1; /* Take up the remaining space */
+}
+
+.sidebar {
+    width: 200px; /* Fixed width for sidebar */
+    background-color: #f4f4f4; /* Light gray background */
+    padding: 15px;
+}
+
+.sidebar h2 {
+    margin-top: 0;
+}
+
+.sidebar ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 10px 0; /* Space between list items */
+}
+
+.sidebar ul li a {
+    text-decoration: none; /* Remove underline */
+    color: #333; /* Dark text color */
+    padding: 8px 12px;
+    display: block; /* Make the entire area clickable */
+    transition: background-color 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background-color: #ddd; /* Light gray on hover */
+}
+
+.content {
+    padding: 20px; /* Add padding to content area */
+    flex: 1; /* Take up remaining space */
+}

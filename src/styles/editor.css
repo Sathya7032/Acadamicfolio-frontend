@@ -1,0 +1,93 @@
+/* General styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    height: 100%;
+}
+
+/* Container to hold the editor and preview */
+.editor-preview-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Dark and light theme styling */
+.editor-preview-container.dark {
+    background-color: #121212;
+    color: white;
+}
+
+.editor-preview-container.light {
+    background-color: white;
+    color: black;
+}
+
+/* Tab Buttons */
+.editor-tabs {
+    display: flex;
+    justify-content: center;
+    background-color: #333;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 10px 20px;
+    background-color: #444;
+    color: white;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
+
+.tab-button.active {
+    background-color: #ff9800;
+}
+
+.tab-button:hover {
+    background-color: #666;
+}
+
+/* Editor sections */
+.editor-section {
+    flex: 1;
+    padding: 10px;
+    background-color: inherit;
+    overflow: hidden;
+}
+
+.CodeMirror {
+    height: 300px;
+}
+
+/* Preview section */
+.preview-section {
+    flex: 1;
+    padding: 10px;
+    background-color: inherit;
+    overflow: auto;
+    border-top: 1px solid #ccc;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .editor-preview-container {
+        flex-direction: column;
+    }
+
+    .CodeMirror {
+        height: 200px;
+    }
+
+    .preview-section {
+        height: 300px;
+    }
+}
+
+h3 {
+    text-align: center;
+    margin-bottom: 10px;
+}

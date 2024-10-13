@@ -1,0 +1,17 @@
+/* In sidebar.css or a global stylesheet */
+.list-group-item a {
+    text-decoration: none;
+    color: #007bff; /* Default color for light theme */
+}
+
+.list-group-item a:visited {
+    color: orange; /* Color after the link is clicked */
+}
+
+body[data-theme='dark'] .list-group-item a {
+    color: #66b3ff; /* Default color for dark theme */
+}
+
+body[data-theme='dark'] .list-group-item a:visited {
+    color: orange; /* Visited link color for dark theme */
+}
