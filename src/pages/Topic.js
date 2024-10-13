@@ -100,25 +100,26 @@ const Topic = () => {
         if (!quiz) return null;
 
         return (
-            <div className="mt-4 p-3" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e', color: theme === 'light' ? '#000' : '#fff' }}>
+            <div className="mt-4 p-5" style={{ backgroundColor: theme === 'light' ? '#6495ed' : '#6495ed', color: theme === 'light' ? '#000' : '#fff', borderRadius: '30px' }}>
                 <h3 className="fw-bold">Quiz: {quiz.title}</h3>
                 {quiz.questions.map((question, index) => (
                     <div key={index} className="my-3">
                         <p className="fw-bold">{question.question_text}</p>
                         <ul className="list-group">
                             {question.options.map((option) => (
-                                <li key={option.id} className="list-group-item">
-                                    <input
-                                        type="radio"
-                                        name={`question${index}`}
-                                        id={option.id}
-                                        value={option.id}
-                                        onChange={() => handleAnswerChange(index, option.id)}
-                                    />
-                                    <label htmlFor={option.id} style={{ marginLeft: '8px' }}>
-                                        {option.text}
-                                    </label>
-                                </li>
+                                <li key={option.id} className="list-group-item" style={{backgroundColor:'#008b8b', marginBottom:'5px',borderRadius:'5px'}}>
+                                <input
+                                    type="radio"
+                                    name={`question${index}`}
+                                    id={option.id}
+                                    value={option.id}
+                                    className="custom-radio"
+                                    onChange={() => handleAnswerChange(index, option.id)}
+                                />
+                                <label htmlFor={option.id} style={{ marginLeft: '8px', fontWeight:'bolder' }}>
+                                    {option.text}
+                                </label>
+                            </li>
                             ))}
                         </ul>
                     </div>
@@ -129,12 +130,12 @@ const Topic = () => {
                 )}
                 {quizResults.map((result, index) => (
                     <div key={index} className="mt-2">
-                        <p>{result.question}</p>
-                        <p>Selected Answer: {result.selectedAnswer}</p>
-                        <p>Correct Answer: {result.correctAnswer}</p>
-                        <p style={{ color: result.is_correct ? 'green' : 'red' }}>
+                        <p className='text-warning fw-bold'><span style={{color:'white'}}>Question :- </span>{result.question}</p>
+                        <p className='fw-bold'><span style={{color:'white'}}>Selected Answer:- </span>{result.selectedAnswer}</p>
+                        <p className='fw-bold'><span style={{color:'white'}}>Correct Answer:- </span>{result.correctAnswer}</p>
+                        <h5 className='fw-bold' style={{ color: result.is_correct ? 'green' : 'red' }}>
                             {result.is_correct ? 'Correct!' : 'Wrong!'}
-                        </p>
+                        </h5>
                     </div>
                 ))}
             </div>
@@ -148,7 +149,7 @@ const Topic = () => {
     return (
         <div>
             <Base>
-                <div className="pt-4" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#121212', color: theme === 'light' ? '#000' : '#fff' }}>
+                <div className="pt-4" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#c0c0c0', color: theme === 'light' ? '#000' : '#fff' }}>
                     <div className="row">
                         <div className="col-md-3" style={{ backgroundColor: theme === 'light' ? '#708090' : '#1e1e1e', color: theme === 'light' ? '#000' : '#fff' }}>
                             <h3 className='pt-3'>Related Topics</h3>
@@ -172,7 +173,7 @@ const Topic = () => {
                         <div className="col-md-9">
                             {topic ? (
                                 <div>
-                                    <div className="mt-3 p-3" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e', color: theme === 'light' ? '#000' : '#fff' }}>
+                                    <div className="mt-3 p-3" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#c0c0c0', color: theme === 'light' ? '#000' : '#6495ed' }}>
                                         <h2 className='fw-bold p-3' style={{ borderRadius: '20px', margin: '0 30px' }}>{topic.title}</h2>
                                         <Divider />
                                         <div className='row mt-4'>
@@ -199,8 +200,10 @@ const Topic = () => {
                                                     switch (block.type) {
                                                         case 'text':
                                                             return (
-                                                                <div key={index} className="my-3" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e', color: theme === 'light' ? '#000' : '#fff' }}>
-                                                                    <div className="topic-content" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(block.content) }} />
+                                                                <div key={index} className="my-3" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#c0c0c0', color: theme === 'light' ? '#000' : '#fff' }}>
+                                                                    <div className="topic-content" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(block.content) }} style={{
+                                                                        color: theme === 'light' ? '#000' : 'white', // Apply text color based on theme
+                                                                    }} />
                                                                 </div>
                                                             );
                                                         case 'image':
@@ -212,10 +215,9 @@ const Topic = () => {
                                                             );
                                                         case 'code':
                                                             return (
-                                                                <div key={index} className="my-3" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e', color: theme === 'light' ? '#000' : '#fff' }}>
+                                                                <div key={index} className="my-3" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#c0c0c0', color: theme === 'light' ? '#000' : '#fff' }}>
                                                                     <div className='d-flex'>
                                                                         <button className="btn btn-primary m-2" onClick={() => copyToClipboard(block.content)}>Copy Code</button>
-                                                                        <button className="btn btn-primary m-2" onClick={() => runCode(block.content, topic.language)}>Run Code</button>
                                                                     </div>
                                                                     <Editor
                                                                         height="200px"

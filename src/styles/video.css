@@ -15,3 +15,51 @@
     margin: 0 20px ;
     justify-content: center;
   }
+
+  .custom-radio {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.custom-radio + label {
+    position: relative;
+    padding-left: 25px; /* Space for the custom radio */
+    cursor: pointer;
+}
+
+.custom-radio + label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #f0f0f0; /* Default background color */
+    border: 2px solid #ccc;
+    box-sizing: border-box;
+}
+
+.custom-radio:checked + label:before {
+    background-color: #007bff; /* Change this to the background color you prefer */
+    border-color: #007bff;
+}
+
+.custom-radio + label:after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: white;
+    opacity: 0;
+}
+
+.custom-radio:checked + label:after {
+    opacity: 1;
+}
