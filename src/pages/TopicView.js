@@ -4,14 +4,16 @@ import '../styles/sidebar.css';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { ThemeContext } from '../components/ThemeContext';
-import '../styles/link.css'
-import image from '../styles/astronaut2.png'
+import '../styles/link.css';
+import image from '../styles/astronaut2.png';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const TopicView = () => {
     const { theme } = useContext(ThemeContext);
     const { url } = useParams(); // Assuming you're using React Router
     const [topics, setTopics] = useState([]); // Updated state name to reflect it's an array of topics
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true); // State to handle loading
     const baseUrl = 'https://acadamicfolio.pythonanywhere.com/';
 
     useEffect(() => {
@@ -20,9 +22,10 @@ const TopicView = () => {
             try {
                 const response = await axios.get(`${baseUrl}api/category/${url}/topics/`);
                 setTopics(response.data); // Set the list of topics
-                console.log(response.data); // For debugging
+                setLoading(false); // Stop loading once data is fetched
             } catch (err) {
                 setError('Tutorial topics not found.');
+                setLoading(false); // Stop loading in case of an error
             }
         };
 
@@ -39,31 +42,35 @@ const TopicView = () => {
                 <div className='container'>
                     <div className='row'>
                         <div className='col-md-8'>
-                            <h2 className='text-center fw-bold text-danger'>List of Topics under <span className='text-uppercase'>{url}</span></h2>
+                            <h3 className='text-center fw-bold text-danger'>List of Topics under <span className='text-uppercase'>{url}</span></h3>
 
-                            <ul className="list-group pb-5 pt-3" style={{ listStyle: 'none' }}>
-                                {topics.length > 0 ? (
-                                    topics.map((top) => (
-
-                                        <li key={top.id} className="list-group-item" >
-                                            <a href={`/${top.url}`} className="topic-link" style={{ textDecoration: 'none', color: theme === 'light' ? '#007bff' : '#66b3ff' }}> {top.title}</a>
-                                        </li>
-                                    ))
-                                ) : (
-                                    <div>No topics found for this category.</div>
-                                )}
-                            </ul>
-                            {/* Loop through topics and display each title */}
-
+                            {loading ? (
+                                <div className="text-center py-5">
+                                    <ClipLoader color={theme === 'light' ? '#000' : '#fff'} loading={loading} size={50} />
+                                </div>
+                            ) : (
+                                <ul className="list-group pb-5 pt-3" style={{ listStyle: 'none' }}>
+                                    {topics.length > 0 ? (
+                                        topics.map((top, index) => (
+                                            <li key={top.id} className="list-group-item text-white" style={{margin:'10px',borderRadius:'20px', backgroundColor:'#778899'}}>
+                                                <a href={`/${top.url}`} className="topic-link" style={{ textDecoration: 'none', color:'white',paddingLeft:'20px' }}>
+                                                    {index+1}. {top.title}
+                                                </a>
+                                            </li>
+                                        ))
+                                    ) : (
+                                        <div>No topics found for this category.</div>
+                                    )}
+                                </ul>
+                            )}
                         </div>
                         <div className='col-md-4'>
-                            {/* You can add related content or additional information here */}
                             <img src={image} alt='' className='img-fluid' style={{ borderRadius: '20px' }} />
                         </div>
                     </div>
                 </div>
-            </div >
-        </Base >
+            </div>
+        </Base>
     );
 }
 

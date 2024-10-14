@@ -37,18 +37,21 @@ export default function Topics() {
                     color: theme === 'light' ? '#000' : '#fff',
                 }}
             >
-                <h1
-                    className='text-center p-5'
-                    style={{
-                        color: theme === 'light' ? '#000' : '#fff',
-                        fontWeight: 'bolder',
-                    }}
-                >
-                    Choose Your Topic
-                </h1>
+
                 <div className='container'>
+
                     <div className='row'>
                         <div className='col-md-8'>
+                            <h2
+                                className='text-center p-5 fw-bold'
+                                style={{
+                                    color: theme === 'light' ? '#000' : '#fff',
+                                    fontWeight: 'bolder',
+                                    fontFamily:'monospace'
+                                }}
+                            >
+                                Code Snippets under {url}
+                            </h2>
                             {loading ? ( // Show loading spinner while fetching
                                 <div className="text-center">
                                     <ClipLoader color={theme === 'light' ? '#000' : '#fff'} loading={loading} size={50} />
@@ -65,7 +68,8 @@ export default function Topics() {
                                                     color: theme === 'light' ? '#333' : '#ddd',
                                                     border: theme === 'light' ? '1px solid #ccc' : '1px solid #444',
                                                     marginBottom: '10px',
-                                                    borderRadius: '5px',
+                                                    borderRadius: '30px',
+                                                    margin: '10px'
                                                 }}
                                             >
                                                 <a

@@ -6,7 +6,7 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import SearchIcon from '@mui/icons-material/Search';
 import '../styles/navbar.css';
 import axios from "axios";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);

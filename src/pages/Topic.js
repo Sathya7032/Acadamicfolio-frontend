@@ -7,6 +7,8 @@ import { Editor } from '@monaco-editor/react';
 import '../styles/video.css';
 import DOMPurify from 'dompurify';
 import { Divider } from '@mui/material';
+import { FaLongArrowAltRight } from "react-icons/fa";
+import ClipLoader from 'react-spinners/ClipLoader'; 
 
 const Topic = () => {
     const { theme } = useContext(ThemeContext);
@@ -16,9 +18,9 @@ const Topic = () => {
     const [relatedTopics, setRelatedTopics] = useState([]);
     const [quiz, setQuiz] = useState(null);
     const [error, setError] = useState(null);
-    const [output, setOutput] = useState('');
     const [selectedAnswers, setSelectedAnswers] = useState({});
     const [quizResults, setQuizResults] = useState([]);
+    const [loading, setLoading] = useState(true); // Add loading state
 
     useEffect(() => {
         const fetchTopicData = async () => {
@@ -29,6 +31,8 @@ const Topic = () => {
                 setRelatedTopics(response.data.related_topics);
             } catch (err) {
                 setError('Tutorial topic not found.');
+            }finally {
+                setLoading(false); // Set loading to false after data is fetched
             }
         };
 
@@ -40,7 +44,6 @@ const Topic = () => {
             try {
                 const response = await axios.get(`https://acadamicfolio.pythonanywhere.com/quiz/${url}/`);
                 setQuiz(response.data);
-                console.log(response.data)
             } catch (err) {
                 console.error('Error fetching quiz:', err);
             }
@@ -49,20 +52,7 @@ const Topic = () => {
         fetchQuizData();
     }, [url]);
 
-    const runCode = (code, language) => {
-        try {
-            if (language === 'javascript') {
-                const result = eval(code);
-                setOutput(result);
-            } else if (language === 'java') {
-                setOutput('Java execution not supported in this example.');
-            } else {
-                setOutput('Unsupported language.');
-            }
-        } catch (err) {
-            setOutput(`Error: ${err.message}`);
-        }
-    };
+   
 
     const copyToClipboard = (code) => {
         navigator.clipboard.writeText(code)
@@ -100,26 +90,26 @@ const Topic = () => {
         if (!quiz) return null;
 
         return (
-            <div className="mt-4 p-5" style={{ backgroundColor: theme === 'light' ? '#6495ed' : '#6495ed', color: theme === 'light' ? '#000' : '#fff', borderRadius: '30px' }}>
+            <div className="mt-4 p-5 m-2" style={{ backgroundColor: theme === 'light' ? '#6495ed' : '#6495ed', color: theme === 'light' ? '#000' : '#fff', borderRadius: '30px' }}>
                 <h3 className="fw-bold">Quiz: {quiz.title}</h3>
                 {quiz.questions.map((question, index) => (
                     <div key={index} className="my-3">
                         <p className="fw-bold">{question.question_text}</p>
                         <ul className="list-group">
                             {question.options.map((option) => (
-                                <li key={option.id} className="list-group-item" style={{backgroundColor:'#008b8b', marginBottom:'5px',borderRadius:'5px'}}>
-                                <input
-                                    type="radio"
-                                    name={`question${index}`}
-                                    id={option.id}
-                                    value={option.id}
-                                    className="custom-radio"
-                                    onChange={() => handleAnswerChange(index, option.id)}
-                                />
-                                <label htmlFor={option.id} style={{ marginLeft: '8px', fontWeight:'bolder' }}>
-                                    {option.text}
-                                </label>
-                            </li>
+                                <li key={option.id} className="list-group-item" style={{ backgroundColor: '#008b8b', marginBottom: '5px', borderRadius: '5px' }}>
+                                    <input
+                                        type="radio"
+                                        name={`question${index}`}
+                                        id={option.id}
+                                        value={option.id}
+                                        className="custom-radio"
+                                        onChange={() => handleAnswerChange(index, option.id)}
+                                    />
+                                    <label htmlFor={option.id} style={{ marginLeft: '8px', fontWeight: 'bolder' }}>
+                                        {option.text}
+                                    </label>
+                                </li>
                             ))}
                         </ul>
                     </div>
@@ -130,9 +120,9 @@ const Topic = () => {
                 )}
                 {quizResults.map((result, index) => (
                     <div key={index} className="mt-2">
-                        <p className='text-warning fw-bold'><span style={{color:'white'}}>Question :- </span>{result.question}</p>
-                        <p className='fw-bold'><span style={{color:'white'}}>Selected Answer:- </span>{result.selectedAnswer}</p>
-                        <p className='fw-bold'><span style={{color:'white'}}>Correct Answer:- </span>{result.correctAnswer}</p>
+                        <p className='text-warning fw-bold'><span style={{ color: 'white' }}>Question :- </span>{result.question}</p>
+                        <p className='fw-bold'><span style={{ color: 'white' }}>Selected Answer:- </span>{result.selectedAnswer}</p>
+                        <p className='fw-bold'><span style={{ color: 'white' }}>Correct Answer:- </span>{result.correctAnswer}</p>
                         <h5 className='fw-bold' style={{ color: result.is_correct ? 'green' : 'red' }}>
                             {result.is_correct ? 'Correct!' : 'Wrong!'}
                         </h5>
@@ -149,16 +139,20 @@ const Topic = () => {
     return (
         <div>
             <Base>
-                <div className="pt-4" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#c0c0c0', color: theme === 'light' ? '#000' : '#fff' }}>
+                <div className="pt-3 mt-0" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#c0c0c0', color: theme === 'light' ? '#000' : '#fff' }}>
                     <div className="row">
-                        <div className="col-md-3" style={{ backgroundColor: theme === 'light' ? '#708090' : '#1e1e1e', color: theme === 'light' ? '#000' : '#fff' }}>
-                            <h3 className='pt-3'>Related Topics</h3>
+                        <div className="col-md-2" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e', color: theme === 'light' ? '#000' : '#fff' }}>
+                            <h5 className='pt-3 pb-3 text-center fw-bold mt-4'>Related Topics</h5>
                             <ul className="list-group" style={{ listStyle: 'none' }}>
-                                {relatedTopics.length > 0 ? (
+                            {loading ? ( // Show ClipLoader while loading
+                                <div className="text-center my-5">
+                                    <ClipLoader color={theme === 'light' ? '#000000' : '#ffffff'} loading={loading} size={20} />
+                                </div>
+                            ) : relatedTopics.length > 0 ? (
                                     relatedTopics.map((related) => (
-                                        <li key={related.id} className="list-group-item" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e', color: theme === 'light' ? '#000' : '#fff' }}>
-                                            <a href={`/${related.url}`} style={{ textDecoration: 'none', color: theme === 'light' ? '#007bff' : '#66b3ff' }}>
-                                                {related.title}
+                                        <li key={related.id} className="list-group-item" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e', color: theme === 'light' ? '#000' : '#fff',width:'103%',marginBottom:'1px' }}>
+                                            <a href={`/${related.url}`} style={{ textDecoration: 'none', color: theme === 'light' ? '#000' : '#fff' }}>
+                                                <FaLongArrowAltRight /> {related.title}
                                             </a>
                                         </li>
                                     ))
@@ -170,8 +164,12 @@ const Topic = () => {
                             </ul>
                         </div>
 
-                        <div className="col-md-9">
-                            {topic ? (
+                        <div className="col-md-10">
+                        {loading ? ( // Show ClipLoader while loading
+                                <div className="text-center my-5">
+                                    <ClipLoader color={theme === 'light' ? '#000000' : '#ffffff'} loading={loading} size={50} />
+                                </div>
+                            ) : topic ? (
                                 <div>
                                     <div className="mt-3 p-3" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#c0c0c0', color: theme === 'light' ? '#000' : '#6495ed' }}>
                                         <h2 className='fw-bold p-3' style={{ borderRadius: '20px', margin: '0 30px' }}>{topic.title}</h2>
@@ -188,11 +186,14 @@ const Topic = () => {
                                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                                         allowFullScreen
                                                         title="Embedded youtube"
+                                                        
                                                     />
                                                 </div>
                                             </div>
                                             <div className='col-md-2'></div>
                                         </div>
+
+                                        <Divider style={{marginTop:'10px'}}/>
 
                                         <div className="mt-4">
                                             {contentBlocks.length > 0 ? (
@@ -201,31 +202,23 @@ const Topic = () => {
                                                         case 'text':
                                                             return (
                                                                 <div key={index} className="my-3" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#c0c0c0', color: theme === 'light' ? '#000' : '#fff' }}>
-                                                                    <div className="topic-content" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(block.content) }} style={{
-                                                                        color: theme === 'light' ? '#000' : 'white', // Apply text color based on theme
-                                                                    }} />
-                                                                </div>
-                                                            );
-                                                        case 'image':
-                                                            const imageUrl = `https://acadamicfolio.pythonanywhere.com${block.content}`;
-                                                            return (
-                                                                <div key={index} className="my-3 d-flex justify-content-center">
-                                                                    <img src={imageUrl} alt="Tutorial" className="img-fluid" style={{ width: '50%', borderRadius:'30px' }} />
+                                                                    <div className="topic-content" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(block.content) }} />
                                                                 </div>
                                                             );
                                                         case 'code':
                                                             return (
-                                                                <div key={index} className="my-3" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#c0c0c0', color: theme === 'light' ? '#000' : '#fff' }}>
-                                                                    <div className='d-flex'>
-                                                                        <button className="btn btn-primary m-2" onClick={() => copyToClipboard(block.content)}>Copy Code</button>
+                                                                <div key={index} className="my-3">
+                                                                    <div className="d-flex justify-content-between">
+                                                                        <button className="btn btn-secondary" onClick={() => copyToClipboard(block.content)}>Copy Code</button>
                                                                     </div>
                                                                     <Editor
                                                                         height="200px"
-                                                                        theme={theme === 'light' ? 'light' : 'vs-dark'}
-                                                                        defaultLanguage={topic.language}
+                                                                        width="100%"
+                                                                        defaultLanguage={block.language}
                                                                         value={block.content}
-                                                                        options={{ readOnly: true }}
+                                                                        theme={theme === 'light' ? 'vs-light' : 'vs-dark'}
                                                                     />
+                                                                    
                                                                 </div>
                                                             );
                                                         default:
@@ -233,15 +226,16 @@ const Topic = () => {
                                                     }
                                                 })
                                             ) : (
-                                                <p>No content available.</p>
+                                                <p>No content found.</p>
                                             )}
                                         </div>
                                     </div>
-                                    <Divider />
                                     {renderQuiz()}
                                 </div>
                             ) : (
-                                <div>Loading...</div>
+                                <div className="text-center my-5">
+                                    <ClipLoader color={theme === 'light' ? '#000000' : '#ffffff'} loading={loading} size={50} />
+                                </div>
                             )}
                         </div>
                     </div>
