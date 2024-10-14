@@ -210,7 +210,7 @@ const Topic = () => {
                                                             const imageUrl = `https://acadamicfolio.pythonanywhere.com${block.content}`;
                                                             return (
                                                                 <div key={index} className="my-3 d-flex justify-content-center">
-                                                                    <img src={imageUrl} alt="Tutorial" className="img-fluid" style={{ width: '60%' }} />
+                                                                    <img src={imageUrl} alt="Tutorial" className="img-fluid" style={{ width: '50%', borderRadius:'30px' }} />
                                                                 </div>
                                                             );
                                                         case 'code':
