@@ -36,7 +36,7 @@ const CodeEditor = ({ language, onRun }) => {
 
     return (
         <div>
-            <div ref={editorRef} style={{ border: '1px solid #ccc' }} />
+            <div ref={editorRef} style={{ border: '1px solid #ccc', height: '100%' }} />
             <button onClick={runCode} className="btn btn-primary mt-2">Run Code</button>
             <div className="mt-2">
                 <label htmlFor="theme-selector">Choose Theme: </label>
