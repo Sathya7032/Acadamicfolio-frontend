@@ -202,7 +202,7 @@ const Topic = () => {
                                                         case 'text':
                                                             return (
                                                                 <div key={index} className="my-3" style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#c0c0c0', color: theme === 'light' ? '#000' : '#fff' }}>
-                                                                    <div className="topic-content" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(block.content) }} />
+                                                                    <div className="topic-content" style={{ textAlign: 'left' }} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(block.content) }} />
                                                                 </div>
                                                             );
                                                         case 'code':
