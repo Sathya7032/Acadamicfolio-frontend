@@ -36,7 +36,7 @@ const Codes = () => {
     }, [url]);
 
     return (
-        <Base>
+       
             <div
                 style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#121212', color: theme === 'light' ? '#000' : '#fff', justifyContent: 'center', alignContent: 'center', maxHeight: '100vh', marginTop: '20px' }}
             >
@@ -106,7 +106,7 @@ const Codes = () => {
                     </>
                 )}
             </div>
-        </Base>
+       
     );
 };
 
