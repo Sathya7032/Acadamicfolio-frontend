@@ -26,7 +26,7 @@ const CodeDisplay = ({ code }) => {
 
     return (
 
-        <div style={{ position: "absolute" }}>
+        <div style={{ position: "relative" }}>
             <button
                 onClick={copyCodeToClipboard}
                 style={{
