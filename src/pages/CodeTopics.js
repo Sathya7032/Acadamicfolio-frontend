@@ -1,84 +1,182 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Typography } from "@mui/material";
-
-import image from '../styles/astronaut2.png';
-import { ClipLoader } from 'react-spinners'; // Import the spinner component
+import { Typography, Box, Container, Grid, useTheme } from "@mui/material";
+import { FiCode, FiChevronRight } from "react-icons/fi";
+import { ClipLoader } from "react-spinners";
 import { ThemeContext } from "../components/ThemeContext";
 import Base from "../components/Base";
-
+import image from "../styles/astronaut2.png";
 
 const CodeTopics = () => {
-    const baseUrl = "https://acadamicfolio.pythonanywhere.com";
-    const { url } = useParams();
-    const [codes, setCodes] = useState([]);
-    const [loading, setLoading] = useState(true); // Add loading state
-    const { theme } = useContext(ThemeContext);
+  const baseUrl = "https://acadamicfolio.pythonanywhere.com";
+  const { url } = useParams();
+  const [codes, setCodes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { theme } = useContext(ThemeContext);
+  const muiTheme = useTheme();
 
-    useEffect(() => {
-        setLoading(true); // Set loading to true when fetching starts
-        axios
-            .get(baseUrl + `/languages/${url}/codes/`)
-            .then((response) => {
-                setCodes(response.data);
-            })
-            .catch((error) => {
-                console.error("Error fetching codes:", error);
-            })
-            .finally(() => {
-                setLoading(false); // Set loading to false when fetching ends
-            });
-    }, [url]);
+  // Style constants
+  const styles = {
+    container: {
+      minHeight: "100vh",
+      padding: muiTheme.spacing(4),
+      transition: "all 0.3s ease",
+    },
+    listItem: {
+      display: "flex",
+      alignItems: "center",
+      padding: muiTheme.spacing(2),
+      marginBottom: muiTheme.spacing(1),
+      borderRadius: muiTheme.shape.borderRadius,
+      transition: "all 0.2s ease",
+      "&:hover": {
+        transform: "translateX(8px)",
+        boxShadow: muiTheme.shadows[2],
+      },
+    },
+    illustration: {
+      borderRadius: "24px",
+      boxShadow: muiTheme.shadows[4],
+      position: "sticky",
+      top: "100px",
+    },
+  };
 
-    return (
-        <Base>
-            <div style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#121212', color: theme === 'light' ? '#000000' : '#ffffff', minHeight: '100vh' }}>
+  useEffect(() => {
+    const fetchCodes = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`${baseUrl}/languages/${url}/codes/`);
+        setCodes(response.data);
+      } catch (error) {
+        console.error("Error fetching codes:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCodes();
+  }, [url]);
+
+  return (
+    <Base>
+      <Box sx={{ 
+        bgcolor: theme === "light" ? "background.default" : "grey.900",
+        color: theme === "light" ? "text.primary" : "common.white",
+      }}>
+        <Container maxWidth="lg">
+          <Typography
+            variant="h3"
+            component="h1"
+            gutterBottom
+            sx={{
+              textAlign: "center",
+              pt: 4,
+              fontWeight: 700,
+              letterSpacing: 1,
+            }}
+          >
+            <FiCode style={{ marginRight: "12px" }} />
+            Select Program
+          </Typography>
+
+          <Grid container spacing={4} sx={{ py: 4 }}>
+            <Grid item xs={12} md={8}>
+              {loading ? (
+                <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+                  <ClipLoader
+                    color={theme === "light" ? muiTheme.palette.text.primary : "#fff"}
+                    size={50}
+                  />
+                </Box>
+              ) : codes.length > 0 ? (
+                <Box component="ul" sx={{ listStyle: "none", p: 0, m: 0 }}>
+                  {codes.map((code, index) => (
+                    <Box
+                      component="li"
+                      key={code.id}
+                      sx={{
+                        ...styles.listItem,
+                        bgcolor: theme === "light" ? "grey.100" : "grey.800",
+                      }}
+                    >
+                      <a
+                        href={`/languages/codes/${code.url}/`}
+                        style={{
+                          textDecoration: "none",
+                          color: "inherit",
+                          width: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography
+                          variant="subtitle1"
+                          sx={{
+                            fontWeight: 600,
+                            flexGrow: 1,
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Box
+                            component="span"
+                            sx={{
+                              bgcolor: "primary.main",
+                              color: "common.white",
+                              width: 32,
+                              height: 32,
+                              borderRadius: "4px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              mr: 2,
+                            }}
+                          >
+                            {index + 1}
+                          </Box>
+                          {code.title}
+                        </Typography>
+                        <FiChevronRight size={20} />
+                      </a>
+                    </Box>
+                  ))}
+                </Box>
+              ) : (
                 <Typography
-                    variant="h4"
-                    style={{ textAlign: "center", paddingTop: 20, fontFamily: 'cursive' }}
+                  variant="h6"
+                  align="center"
+                  sx={{ py: 4, color: "text.secondary" }}
                 >
-                    Pick your Program
+                  No programs available
                 </Typography>
+              )}
+            </Grid>
 
-                <div className="container p-5">
-                    <div className="row">
-                        <div className="col-md-8">
-                            {loading ? ( // Show loading spinner while fetching
-                                <div className="text-center">
-                                    <ClipLoader color={theme === 'light' ? '#000' : '#fff'} loading={loading} size={50} />
-                                </div>
-                            ) : (
-                                codes.length > 0 ? (
-                                    <ul className='list-group'>
-                                        {codes.map((code, index) => (
-                                            <div key={code.id}>
-                                                <a href={`/languages/codes/${code.url}/`}>
-                                                    <li className='list-group-item' style={{ backgroundColor: theme === 'light' ? '#f8f9fa' : '#2c2c2c' }}>
-                                                        <span style={{ fontSize: 15, color: theme === 'light' ? 'darkslategrey' : 'lightgrey', fontWeight: 'bolder', padding: 5 }}>
-                                                            {index + 1}. {code.title}
-                                                        </span>
-                                                    </li>
-                                                </a>
-                                            </div>
-                                        ))}
-                                    </ul>
-                                ) : (
-                                    <Typography variant="h6" style={{ textAlign: "center", color: theme === 'light' ? '#000000' : '#ffffff' }}>
-                                        No codes yet
-                                    </Typography>
-                                )
-                            )}
-                        </div>
-                        <div className="col-md-4">
-                            <img src={image} alt='' className='img-fluid' style={{ borderRadius: '20px' }} />
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </Base>
-    );
+            <Grid item xs={12} md={4}>
+              <Box sx={styles.illustration}>
+                <img
+                  src={image}
+                  alt="Coding concepts"
+                  className="img-fluid"
+                  style={styles.illustration}
+                />
+                <Typography
+                  variant="caption"
+                  display="block"
+                  align="center"
+                  sx={{ mt: 2, color: "text.secondary" }}
+                >
+                  Explore practical programming examples
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+    </Base>
+  );
 };
 
 export default CodeTopics;

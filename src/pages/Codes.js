@@ -1,11 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Paper, Typography } from "@mui/material";
+import { 
+  Paper, 
+  Typography, 
+  Container,
+  Box,
+  CircularProgress,
+  Alert,
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 import CodeDisplay from "./CodeDisplay";
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
-import { ClipLoader } from 'react-spinners'; // Import the spinner component
 import { ThemeContext } from "../components/ThemeContext";
 import Base from "../components/Base";
 
@@ -14,99 +20,132 @@ const Codes = () => {
     const { url } = useParams();
     const [topics, setTopics] = useState(null);
     const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true); // Add loading state
+    const [loading, setLoading] = useState(true);
     const { theme } = useContext(ThemeContext);
-    const the = useTheme();
-    const isMobile = useMediaQuery(the.breakpoints.down('sm'));
+    const muiTheme = useTheme();
+    const isMobile = useMediaQuery(muiTheme.breakpoints.down('sm'));
+
+    // Rest of the component remains the same...
 
     useEffect(() => {
-        setLoading(true); // Set loading to true when fetching starts
-        axios
-            .get(`${baseUrl}/languages/codes/${url}/`)
-            .then((response) => {
-                setTopics(response.data);
-            })
-            .catch((error) => {
-                setError("Error fetching tutorials");
-                console.error("Error fetching tutorials:", error);
-            })
-            .finally(() => {
-                setLoading(false); // Set loading to false when fetching ends
-            });
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                const { data } = await axios.get(`${baseUrl}/languages/codes/${url}/`);
+                setTopics(data);
+            } catch (err) {
+                setError("Failed to load code content");
+                console.error("Fetch error:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
     }, [url]);
 
     return (
-       
-            <div
-                style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#121212', color: theme === 'light' ? '#000' : '#fff', justifyContent: 'center', alignContent: 'center', maxHeight: '100vh', marginTop: '20px' }}
-            >
-                {error && (
-                    <Typography color="error" style={{ margin: 20 }}>
-                        {error}
-                    </Typography>
-                )}
-                {loading ? ( // Show loading spinner while fetching
-                    <div className="text-center" style={{ padding: 20 }}>
-                        <ClipLoader color={theme === 'light' ? '#000' : '#fff'} loading={loading} size={50} />
-                    </div>
-                ) : topics && (
-                    <>
-                        <Paper
-                            style={{
-                                margin: isMobile ? 0 : 5,
-                                backgroundColor: theme === 'light' ? 'darkslategrey' : '#2c2c2c',
-                                padding: isMobile ? 5 : 5,
-                            }}
-                        >
-                            <Typography
-                                variant={isMobile ? "h6" : "h6"}
-                                style={{
-                                    textAlign: "center",
-                                    color: 'white',
+        <Base>
+            <Box sx={{
+                minHeight: '100vh',
+                bgcolor: theme === 'light' ? 'background.default' : 'grey.900',
+                py: 8
+            }}>
+                <Container maxWidth="lg">
+                    {error && (
+                        <Alert severity="error" sx={{ mb: 4 }}>
+                            {error}
+                        </Alert>
+                    )}
+
+                    {loading ? (
+                        <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '40vh'
+                        }}>
+                            <CircularProgress size={60} />
+                        </Box>
+                    ) : topics && (
+                        <Box sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 4
+                        }}>
+                            {/* Header Section */}
+                            <Paper sx={{
+                                px: isMobile ? 2 : 4,
+                                py: 3,
+                                bgcolor: 'primary.main',
+                                color: 'primary.contrastText',
+                                borderRadius: 2,
+                                boxShadow: 3
+                            }}>
+                                <Typography variant="h4" component="h4" sx={{
+                                    fontWeight: 700,
+                                    textAlign: 'center',
                                     textTransform: 'uppercase',
-                                }}
-                            >
-                                {topics.title}
-                            </Typography>
-                            <script
-                                async
-                                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6919135852803356"
-                                crossOrigin="anonymous"
-                            ></script>
-                            <ins
-                                className="adsbygoogle"
-                                style={{ display: "block", textAlign: "center" }}
-                                data-ad-layout="in-article"
-                                data-ad-format="fluid"
-                                data-ad-client="ca-pub-6919135852803356"
-                                data-ad-slot="9140112864"
-                            ></ins>
-                        </Paper>
-                        <Paper
-                            style={{
-                                margin: isMobile ? 0 : 20,
-                                backgroundColor: theme === 'light' ? 'snow' : '#2c2c2c',
-                                padding: isMobile ? 10 : 20,
-                            }}
-                        >
-                            <CodeDisplay code={topics.code} />
-                        </Paper>
-                        <Paper
-                            style={{
-                                margin: isMobile ? 0 : 20,
-                                backgroundColor: theme === 'light' ? 'snow' : '#2c2c2c',
-                                padding: isMobile ? 10 : 20,
-                            }}
-                        >
-                            <Typography
-                                style={{ fontSize: isMobile ? '14px' : 'inherit', color: theme === 'light' ? '#000000' : '#ffffff' }}
-                                dangerouslySetInnerHTML={{ __html: topics.content }}
-                            />
-                        </Paper>
-                    </>
-                )}
-            </div>
-       
+                                    letterSpacing: 1
+                                }}>
+                                    {topics.title}
+                                </Typography>
+                                
+                                {/* Ad Unit */}
+                                <Box sx={{ mt: 3, textAlign: 'center' }}>
+                                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6919135852803356" 
+                                            crossOrigin="anonymous" />
+                                    <ins className="adsbygoogle"
+                                        style={{ display: 'block' }}
+                                        data-ad-client="ca-pub-6919135852803356"
+                                        data-ad-slot="9140112864"
+                                        data-ad-format="auto"
+                                        data-full-width-responsive="true" />
+                                </Box>
+                            </Paper>
+
+                            {/* Code Display Section */}
+                            <Paper sx={{
+                                p: isMobile ? 2 : 4,
+                                borderRadius: 2,
+                                boxShadow: 3,
+                                bgcolor: theme === 'light' ? 'background.paper' : 'grey.800'
+                            }}>
+                                <CodeDisplay code={topics.code} />
+                            </Paper>
+
+                            {/* Content Section */}
+                            <Paper sx={{
+                                p: isMobile ? 2 : 4,
+                                borderRadius: 2,
+                                boxShadow: 3,
+                                bgcolor: theme === 'light' ? 'background.paper' : 'grey.800'
+                            }}>
+                                <Box sx={{
+                                    '& h2': { 
+                                        fontSize: '1.5rem',
+                                        fontWeight: 600,
+                                        mt: 3,
+                                        mb: 2,
+                                        color: 'text.primary'
+                                    },
+                                    '& p': {
+                                        lineHeight: 1.6,
+                                        mb: 2,
+                                        color: 'text.secondary'
+                                    },
+                                    '& pre': {
+                                        p: 2,
+                                        borderRadius: 1,
+                                        bgcolor: theme === 'light' ? 'grey.100' : 'grey.900',
+                                        overflowX: 'auto'
+                                    }
+                                }} dangerouslySetInnerHTML={{ __html: topics.content }} />
+                            </Paper>
+                        </Box>
+                    )}
+                </Container>
+            </Box>
+        </Base>
     );
 };
 
